@@ -1,0 +1,77 @@
+---
+
+
+- hosts: master1
+  become: yes
+  vars_files:
+  - vars.yml
+
+  tasks:
+  - name: Pulling images required for setting up a Kubernetes cluster
+    shell: kubeadm config images pull
+
+  - name: get the NLB DNS name
+    shell: cat {{ nlb_dns_file }}
+    register: nlb_dns_name
+    delegate_to: localhost
+
+  
+  - set_fact:
+        nlb_dns_name: "{{ nlb_dns_name.stdout_lines[0] }}"
+
+  - name: Update /etc/hosts with nlb info
+    lineinfile:
+        path: /etc/hosts
+        regexp: '^{{ ansible_host }}'
+        line: "{{ ansible_host }} {{ ansible_nodename }} {{ nlb_dns_name }}"
+
+  - name: Copying config file to master1
+    template:
+        src: templates/master_config.j2
+        dest: "{{ config_file }}"
+
+  - name: Resetting kubeadm
+    shell: kubeadm reset -f
+
+  - name: Initializing Kubernetes cluster
+    shell: kubeadm init --config {{ config_file }} --upload-certs
+    register: kubeadm_output
+
+  - name: Storing Logs and Generated token for future purpose.
+    local_action: copy content={{ kubeadm_output.stdout }} dest={{ token_file }}
+
+  - name: Copying required files
+    shell: |
+     mkdir -p $HOME/.kube
+     cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+     chown $(id -u):$(id -g) $HOME/.kube/config 
+
+  - name: Setup the directory for kubeconfig on management node
+    shell: |
+      mkdir -p $HOME/.kube
+      chown $(id -u):$(id -g) $HOME/.kube/
+    delegate_to: localhost
+
+  - name: fetch the kubeconfig to management node
+    fetch:
+      src: /etc/kubernetes/admin.conf
+      dest: /root/.kube/
+      flat: yes
+      
+  - name: correct the config file name
+    shell: |
+       mv $HOME/.kube/admin.conf $HOME/.kube/config
+       chmod 640 $HOME/.kube/config
+    delegate_to: localhost
+
+  - name: Delete kubeconfig
+    file:
+       path: "{{ config_file }}"
+       state: absent
+
+  - name: Install Network Add-on
+    command: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  
+  - name: Install AWS Storage Class
+    command: kubectl apply -f https://raw.githubusercontent.com/kubernetes/kubernetes/master/cluster/addons/storage-class/aws/default.yaml
+

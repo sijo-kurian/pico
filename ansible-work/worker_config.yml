@@ -1,0 +1,45 @@
+- hosts: workers
+  become: yes
+  vars_files:
+  - vars.yml
+
+  tasks:
+  - name: Pulling images required for setting up a Kubernetes cluster
+    shell: kubeadm config images pull
+
+  - name: get the NLB DNS name
+    shell: cat {{ nlb_dns_file }}
+    register: nlb_dns_name
+    delegate_to: localhost
+
+  - set_fact:
+        nlb_dns_name: "{{ nlb_dns_name.stdout_lines[0] }}"
+
+  - name: Get the worker_token
+    shell: cat {{ token_file }} | tail -2 | head -1 | awk '{print $5}'
+    register: worker_token
+    delegate_to: localhost
+
+  - set_fact:
+        worker_token_key: "{{ worker_token.stdout_lines[0] }}"
+
+  - name: Get the worker_hash
+    shell: cat {{ token_file }} | tail -2 | grep discovery | awk '{print $2}'
+    register: worker_hash
+    delegate_to: localhost
+
+  - set_fact:
+        worker_hash_key: "{{ worker_hash.stdout_lines[0] }}"
+
+  - name: Copying config file to master1
+    template:
+        src: templates/worker_config.j2
+        dest: "{{ config_file }}"
+
+  - name: Joining the cluster
+    shell: kubeadm join --config {{ config_file }}
+
+  - name: Delete kubeconfig
+    file:
+       path: "{{ config_file }}"
+       state: absent

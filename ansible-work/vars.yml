@@ -1,0 +1,9 @@
+---
+# vars file for kubeadm
+
+token_file: join_token
+cluster_name: pico-k8s-cluster
+pod_cidr: 192.168.0.0/16
+service_cidr: 10.96.0.0/12
+config_file: /tmp/config.yml
+nlb_dns_file: /opt/ansible/nlb_dns_name

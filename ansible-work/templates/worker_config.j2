@@ -1,0 +1,12 @@
+---
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    token: {{ worker_token_key }}
+    apiServerEndpoint: "{{ nlb_dns_name }}:6443"
+    caCertHashes: ["{{ worker_hash_key }}"]
+nodeRegistration:
+  name: "{{ ansible_nodename }}"
+  kubeletExtraArgs:
+    cloud-provider: aws

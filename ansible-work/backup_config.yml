@@ -1,0 +1,59 @@
+- hosts: master2
+  become: yes
+  vars_files:
+  - vars.yml
+
+  tasks:
+  - name: Pulling images required for setting up a Kubernetes cluster
+    shell: kubeadm config images pull
+
+  - name: get the NLB DNS name
+    shell: cat {{ nlb_dns_file }}
+    register: nlb_dns_name
+    delegate_to: localhost
+
+  - set_fact:
+        nlb_dns_name: "{{ nlb_dns_name.stdout_lines[0] }}"
+
+  - name: Get the master_token
+    shell: cat {{ token_file }} | tail -12 | head -2 | awk '{print $5}'
+    register: master_token
+    delegate_to: localhost
+
+  - set_fact:
+        master_token_key: "{{ master_token.stdout_lines[0] }}"
+
+  - name: Get the master_hash
+    shell: cat {{ token_file }} | tail -12 | head -2 | grep discovery | awk '{print $2}'
+    register: master_hash
+    delegate_to: localhost
+
+  - set_fact:
+        master_hash_key: "{{ master_hash.stdout_lines[0] }}"
+
+  - name: Get the master_certificate
+    shell: cat {{ token_file }} | tail -12 | head -3 | grep certificate-key | awk '{print $3}'
+    register: master_certificate
+    delegate_to: localhost
+
+  - set_fact:
+        master_cert_key: "{{ master_certificate.stdout_lines[0] }}"
+
+  - name: Copying config file to master1
+    template:
+        src: templates/backup_config.j2
+        dest: "{{ config_file }}"
+
+  - name: Initializing Kubernetes cluster
+    shell: kubeadm join --config {{ config_file }}
+
+  - name: Delete kubeconfig
+    file:
+       path: "{{ config_file }}"
+       state: absent
+       
+  - name: Copying required files
+    shell: |
+     mkdir -p $HOME/.kube
+     cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+     chown $(id -u):$(id -g) $HOME/.kube/config
