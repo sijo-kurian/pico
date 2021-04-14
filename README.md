@@ -8,6 +8,7 @@ Cluster nodes would be placed in a private subnet and would be accessed via a Ne
 
 Detailed architecture diagram is provided below.
 
+
 ![image](https://user-images.githubusercontent.com/55138596/114770648-914d0880-9d63-11eb-8b9e-6deeffa7de9f.png)
 
 
@@ -95,7 +96,11 @@ Installation would be done in two stages. In the initial stage we would be provi
  # kubectl get nodes
  ```
  
+## Sample Application
 
+We have used a small hello world application and deployed it to the Kuberenetes cluster using GitLabs
+
+Link to the application repo : https://github.com/sijo-kurian/hello-world-k8s
 
 ---
 
