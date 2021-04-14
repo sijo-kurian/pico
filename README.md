@@ -8,7 +8,9 @@ Cluster nodes would be placed in a private subnet and would be accessed via a Ne
 
 Detailed architecture diagram is provided below.
 
-![image](https://user-images.githubusercontent.com/55138596/114378806-fa742680-9b7f-11eb-95f2-cf2a43fe3704.png)
+![image](https://user-images.githubusercontent.com/55138596/114770648-914d0880-9d63-11eb-8b9e-6deeffa7de9f.png)
+
+
 
 ## Pre-requisites
 
