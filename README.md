@@ -56,12 +56,11 @@ Which creates two files named MyKeyPair (private key) and MyKeyPair.pub (public 
 ## Installation
 
 Installation would be done in two stages. In the initial stage we would be provisioning all the AWS Infrastructure required. Second stage would be on the management node using an installation script.
-
-### AWS Infastructure Provision
-
 ##### Versions Used: 
    ###### AWS Provider: v3.36.0
    ###### Terraform: v0.14.9
+
+### AWS Infastructure Provision
 
 #### 1. Initialize the plan
 ```sh
