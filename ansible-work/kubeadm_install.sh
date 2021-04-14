@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 # Wrapper script to install the ansible-playbooks required to create the cluster
 # Add the ssh-key
 if [ -z "$SSH_AUTH_SOCK" ]; then
