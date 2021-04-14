@@ -68,8 +68,31 @@ Installation would be done in two stages. In the initial stage we would be provi
 ```sh
  $ terraform apply 
  ```
+ You would be getting the management IP as an outout from the terraform apply.
  
-
+ ### Kubernetes Cluster Creation
+ 
+ Log in to the management system using the EC2 key. This would be the node you would be using to manage and deploy Kuberenetes environment.
+ 
+ Transfer the ansible private key to this server. This could be automated, how ever that would leave the private key in Terraform environment. For security reasons its ideal to keep this outside terraform or use any vault solutions like AWS KMS.
+ 
+ export the ansible private key location as below.
+ 
+ ```sh
+ export ANSIBLE_KEY_FILE=<fullpath to the key file>
+ ```
+ Now change the directory to /tmp/ansible-work, terraform build stage would have copied the necessary scripts and file on this location. Now you should be able to run the install script. This script will install cluster components on two servers and configure two worker nodes to join them. Network CNI plugin and AWS native storage class would be installed.
+ 
+ ```sh
+ # cd /tmp/ansible-work; ./install_kubeadm.sh
+ ```
+ 
+ Install process would configure the kuberenetes context in the management server. So you should check nodes on management server
+ 
+ ```sh
+ # kubectl get nodes
+ ```
+ 
 
 
 ---
