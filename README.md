@@ -1,6 +1,6 @@
 # Multi Master Kubernetes Cluster on AWS
 
-We would be creating a two master kubernetes cluster with two worker nodes. 
+We be creating a two master kubernetes cluster with two worker nodes. 
 
 Infrastructure required for the setup would be provisioned with the terraform plans. All the components like VPC, Subnets, Internet Gateway (IGW), NAT Gateways, Network Load Balancer, routing table, IAM Roles etc would be created in this plan.
 
@@ -99,7 +99,7 @@ Installation would be done in two stages. In the initial stage we would be provi
  
 ## Sample Application
 
-We have used a small hello world application and deployed it to the Kuberenetes cluster using GitLabs
+I have used a small hello world application to demonstrate deploying to the Kuberenetes cluster via GitLabs CI
 
 Link to the application repo : https://github.com/sijo-kurian/hello-world-k8s
 
