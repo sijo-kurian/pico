@@ -16,3 +16,4 @@ crash.log
 # Key Files
 
 MyKeyPair.*
+*.pem

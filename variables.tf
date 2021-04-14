@@ -49,7 +49,7 @@ variable "ami_id" {
 }
 
 variable "mgmt_private_key" {
-  default = "~/.ssh/eu-west-1-keypair.pem"
+  default = "eu-west-1-keypair.pem"
 }
 
 variable "ansible_public_key" {
