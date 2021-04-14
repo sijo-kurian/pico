@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # Wrapper script to install the ansible-playbooks required to create the cluster
 # Add the ssh-key
@@ -20,3 +20,4 @@ echo Waiting for the backup up server to be ready
 #sleep 60
 # playbook to join the worker nodes
 ansible-playbook worker_config.yml -i /opt/ansible/inventory
+
