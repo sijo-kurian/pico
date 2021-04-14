@@ -59,6 +59,10 @@ Installation would be done in two stages. In the initial stage we would be provi
 
 ### AWS Infastructure Provision
 
+##### Versions Used: 
+   ###### AWS Provider: v3.36.0
+   ###### Terraform: v0.14.9
+
 #### 1. Initialize the plan
 ```sh
  $ terraform init
