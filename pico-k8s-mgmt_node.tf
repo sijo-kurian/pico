@@ -60,7 +60,7 @@ resource "aws_instance" "pico-k8s-mgmt" {
   tags = {
    Name = "pico-k8s-mgmt"
   }
-  user_data = templatefile("mgmt_user_data.sh", local.inventory)
+  user_data = templatefile("pico-k8s-mgmt_user_data.sh", local.inventory)
 
 }
 

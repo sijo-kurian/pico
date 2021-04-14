@@ -159,7 +159,7 @@ resource "aws_instance" "pico-k8s-worker" {
      "Name"                                      = "pico-k8s-worker-${count.index}"
      "kubernetes.io/cluster/${var.cluster_name}" = "owned"
    }
-user_data = templatefile("k8s_nodes_user_data.sh", local.vars)
+user_data = templatefile("pico-k8s_nodes_user_data.sh", local.vars)
 
 }
 
